@@ -1,13 +1,16 @@
-
 from settings import SettingsClass
 from piece import *
 from player import Player
+
 
 class Board:
     def __init__(self):
         # Set Settings
         self.settings = SettingsClass()
-            
+
+        # Set first player
+        self.player_turn = Player.WHITE
+
         # Inicialize Board
         self.board = []
         for i in range(self.settings.number_squares):
@@ -44,28 +47,40 @@ class Board:
         # NONE Spaces
         for row in range(2, 6):
             for col in range(self.settings.number_squares):
-                self.board[row][col] = No_Piece((row, col), Player.NONE)     
+                self.board[row][col] = No_Piece((row, col), Player.NONE)
 
     # ____________________________ Print Console Board__________________________
     def print_board(self) -> None:
         for row in range(len(self.board)):
             print("| ", end="")
             for element in self.board[row]:
-                print(element._name, end=' | ')
+                print(element._name, end=" | ")
             print()
             print("---------------------------------")
 
-        #print("Columns on the Board: ", len(self.board[0]))
-        #print("Rows on the Board: ", len(self.board))
+        # print("Columns on the Board: ", len(self.board[0]))
+        # print("Rows on the Board: ", len(self.board))
 
     # ________________________________ Switch Player ____________________________
+    def switch_player(self):
+        if self.player_turn == Player.WHITE:
+            self.player_turn = Player.BLACK
+        elif self.player_turn == Player.BLACK:
+            self.player_turn == Player.WHITE
 
-    # ________________________________ Get Player Colour ________________________            
+    # _______________________________ Moving Piece __________________________
+    def move_piece(self, old_position, new_position):
+        old_position_row = old_position.get_row()
+        old_position_col = old_position.get_col()
 
-    # _______________________________ Moving Animation __________________________
-        
-        
+        new_position_row = new_position.get_row()
+        new_position_col = new_position.get_col()
 
+        piece_to_move = self.board[old_position_row][old_position_col]
+        self.board[old_position_row][old_position_col] = No_Piece(
+            (old_position_row, old_position_col), Player.NONE
+        )
+        self.board[new_position_row][new_position_col] = piece_to_move
 
 
 if __name__ == "__main__":
