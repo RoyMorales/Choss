@@ -2,6 +2,7 @@
 import pygame
 
 from player import Player
+from util import absolute_moves
 
 
 class Piece:
@@ -63,24 +64,7 @@ class Rook(Piece):
             if i != 0:
                 relative_moves.append((0, i))
                 relative_moves.append((i, 0))
-        
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            new_position_row = position_row + move_row
-            new_position_col = position_col + move_col
-            
-            
-            if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
-                new_position = (new_position_row, new_position_col)
-                absolute_moves.append(new_position)
-                        
-        return absolute_moves
+        return absolute_moves(self, relative_moves)
 
 
 
@@ -102,19 +86,7 @@ class Knight(Piece):
     def moves(self) -> list:
         # L movement
         relative_moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2)]
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            if 0 <= position_row + move_row < 8 and 0 <= position_col + move_col < 8:
-                new_position = (position_row + move_row, position_col + move_col)
-                absolute_moves.append(new_position)
-        return absolute_moves
-
+        return absolute_moves(self, relative_moves)
 
 
 class Bishop(Piece):
@@ -139,24 +111,7 @@ class Bishop(Piece):
             if i != 0:
                 relative_moves.append((i, i))
                 relative_moves.append((i, -i))
-            
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            new_position_row = position_row + move_row
-            new_position_col = position_col + move_col
-            
-            
-            if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
-                new_position = (position_row + move_row, position_col + move_col)
-                absolute_moves.append(new_position)
-                
-        return absolute_moves
+        return absolute_moves(self, relative_moves)
 
 
 class Pawn(Piece):
@@ -193,23 +148,8 @@ class Pawn(Piece):
             else:
                 print("Somethin Wrong lol - Invalid Move")
         
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            new_position_row = position_row + move_row
-            new_position_col = position_col + move_col
-            
-            
-            if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
-                new_position = (position_row + move_row, position_col + move_col)
-                absolute_moves.append(new_position)
-                
-        return absolute_moves    
+        return absolute_moves(self, relative_moves)
+  
 
 class Queen(Piece):
     def __init__(self, position, player):
@@ -236,23 +176,8 @@ class Queen(Piece):
                 relative_moves.append((i, i))
                 relative_moves.append((i, -i))
 
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            new_position_row = position_row + move_row
-            new_position_col = position_col + move_col
-            
-            
-            if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
-                new_position = (position_row + move_row, position_col + move_col)
-                absolute_moves.append(new_position)
-                
-        return absolute_moves
+        return absolute_moves(self, relative_moves)
+
 
 class King(Piece):
     def __init__(self, position, player):
@@ -278,22 +203,8 @@ class King(Piece):
                 if i != 0 or j != 0:
                     relative_moves.append((i, j))
         
-        absolute_moves = []
-        for element in relative_moves:
-            move_row = element[0]
-            move_col = element[1]
-            
-            position_row = self.get_row()
-            position_col = self.get_col()
-            
-            new_position_row = position_row + move_row
-            new_position_col = position_col + move_col
-            
-            if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
-                new_position = (position_row + move_row, position_col + move_col)
-                absolute_moves.append(new_position)
-                
-        return absolute_moves
+        return absolute_moves(self, relative_moves)
+
 
 class No_Piece(Piece):
     def __init__(self, position, player):

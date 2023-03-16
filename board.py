@@ -35,23 +35,16 @@ class Board:
         # Pawns
         # White
         for col in range(self.settings.number_squares):
-            self.board[6][col] = Pawn((col, 6), Player.WHITE)
+            self.board[6][col] = Pawn((6, col), Player.WHITE)
 
         # Black
         for col in range(self.settings.number_squares):
-            self.board[1][col] = Pawn((col, 6), Player.BLACK)
+            self.board[1][col] = Pawn((1, col), Player.BLACK)
 
         # NONE Spaces
         for row in range(2, 6):
             for col in range(self.settings.number_squares):
-                self.board[row][col] = No_Piece((row, col), Player.NONE)
-                
-                
-        self.board[4][4] = Knight((4, 4), Player.WHITE)
-        self.board[3][2] = Bishop((3, 2), Player.WHITE)
-        self.board[5][5] = Rook((5, 5), Player.BLACK)
-        
-        
+                self.board[row][col] = No_Piece((row, col), Player.NONE)     
 
     # ____________________________ Print Console Board__________________________
     def print_board(self) -> None:
