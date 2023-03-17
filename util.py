@@ -1,5 +1,5 @@
 
-def absolute_moves(object, relative_moves):
+def absolute_moves(object, relative_moves) -> list:
     absolute_moves = []
     for element in relative_moves:
         move_row = element[0]

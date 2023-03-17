@@ -24,13 +24,16 @@ class Piece:
         self.col_number = position[1]
         self._player = player
 
-    def get_row(self):
+    def get_row(self) -> int:
         return self.row_number
 
-    def get_col(self):
+    def get_col(self) -> int:
         return self.col_number
+    
+    def get_pos(self) -> tuple:
+        return (self.row_number, self.col_number)
 
-    def get_player(self):
+    def get_player(self) -> Player:
         return self._player
 
     def change_row(self, new_row):
@@ -44,9 +47,10 @@ class Rook(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "R"
+        self.list_moves = []
 
         # Castlings Stuff
-        self.piece_moved = False
+        self.castle = True
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/rook_white.png")
@@ -58,13 +62,13 @@ class Rook(Piece):
     def get_name(self):
         return self._name
     
-    def moves(self) -> list:
+    def moves(self):
         relative_moves = []
         for i in range(-7, 8):
             if i != 0:
                 relative_moves.append((0, i))
                 relative_moves.append((i, 0))
-        return absolute_moves(self, relative_moves)
+        self.list_moves = absolute_moves(self, relative_moves)
 
 
 
@@ -72,6 +76,8 @@ class Knight(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "H"
+        self.list_moves = []
+
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/knight_white.png")
@@ -83,16 +89,17 @@ class Knight(Piece):
     def get_name(self):
         return self._name
     
-    def moves(self) -> list:
+    def moves(self):
         # L movement
         relative_moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2)]
-        return absolute_moves(self, relative_moves)
+        self.list_moves = absolute_moves(self, relative_moves)
 
 
 class Bishop(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "B"
+        self.list_moves = []
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/bishop_white.png")
@@ -104,20 +111,21 @@ class Bishop(Piece):
     def get_name(self):
         return self._name
     
-    def moves(self) -> list:
+    def moves(self):
         # X movement
         relative_moves = []
         for i in range(-7, 8):
             if i != 0:
                 relative_moves.append((i, i))
                 relative_moves.append((i, -i))
-        return absolute_moves(self, relative_moves)
+        self.list_moves = absolute_moves(self, relative_moves)
 
 
 class Pawn(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "P"
+        self.list_moves = []
 
         # First Move 2 Squares
         self.piece_moved = False
@@ -132,7 +140,7 @@ class Pawn(Piece):
     def get_name(self):
         return self._name
 
-    def moves(self) -> list:
+    def moves(self):
         if self._player == Player.WHITE:
             if self.piece_moved == False:
                 relative_moves = [(-1, 0), (-2, 0)]
@@ -147,14 +155,15 @@ class Pawn(Piece):
                 relative_moves = [(1, 0)]
             else:
                 print("Somethin Wrong lol - Invalid Move")
-        
-        return absolute_moves(self, relative_moves)
+    
+        self.list_moves = absolute_moves(self, relative_moves)
   
 
 class Queen(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "Q"
+        self.list_moves = []
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/queen_white.png")
@@ -175,16 +184,17 @@ class Queen(Piece):
                 relative_moves.append((i, 0))
                 relative_moves.append((i, i))
                 relative_moves.append((i, -i))
-
-        return absolute_moves(self, relative_moves)
+                
+        self.list_moves = absolute_moves(self, relative_moves)
 
 
 class King(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "K"
+        self.list_moves = []
         
-        self.piece_moved = False
+        self.castle = True
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/king_white.png")
@@ -202,17 +212,18 @@ class King(Piece):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
                     relative_moves.append((i, j))
-        
-        return absolute_moves(self, relative_moves)
+        self.list_moves = absolute_moves(self, relative_moves)
+
 
 
 class No_Piece(Piece):
     def __init__(self, position, player):
         super().__init__(position, player)
         self._name = "*"
+        self.list_moves = []
 
     def get_name(self):
         return self._name
 
-    def moves(self) -> list:
-        return []
+    def moves(self) :
+        self.list_moves = []

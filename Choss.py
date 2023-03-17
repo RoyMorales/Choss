@@ -52,22 +52,20 @@ class Choss:
             print("Left Mouse Click:", mouse_pos)
             piece_selected = self.click_collisions(mouse_pos)
             if len(self.right_click_history) > 0:
-                print("Clean right click History")
                 self.right_click_history = []
             else:
-                if  len(self.left_click_history) < 1:
-                    print("Here 1")
-                    self.left_click_history.append(piece_selected) 
-                    print("History: ", self.left_click_history)
-                    print("Len of List", len(self.left_click_history))
+                if  len(self.left_click_history) == 0:
+                    if piece_selected._name != self.No_Piece_Ref._name:
+                        self.left_click_history.append(piece_selected) 
 
                 elif len(self.left_click_history) == 1:
-                    print("Here")
-                    self.left_click_history.append(piece_selected) 
+                    self.left_click_history.append(piece_selected)
+                    
+                    
+                    
                     self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
                     self.left_click_history = []
                     self.game_board.print_board()
-                
     
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == self.RIGHT:
             print("Right Mouse Click: ", mouse_pos)
@@ -77,6 +75,7 @@ class Choss:
             else:
                 self.right_click_history.append(piece_selected)
                 self.highlight_squares()
+                
     #elif event.type == pygame.MOUSEMOTION and self.selected_piece_moving == True:
     #    self.moving_animation(mouse_pos)
 
@@ -119,12 +118,10 @@ class Choss:
         # Highlight Moves
         if len(self.left_click_history) == 1:
             self.highlight_moves()
-        
+        # Highrlight Squares
         if len(self.right_click_history) != 0:
             self.highlight_squares() 
             
-        # Highrlight Squares
-
         # Draw lines
         # Horizontal
         for line in range(1, self.settings.number_squares):
@@ -159,8 +156,8 @@ class Choss:
             
             self.selected_piece = self.left_click_history[0]
                 
-            list_moves = self.selected_piece.moves()
-            for element in list_moves:
+            self.selected_piece.moves()
+            for element in self.selected_piece.list_moves:
                 board_pos_row = element[0]
                 board_pos_col = element[1]
         
@@ -225,8 +222,6 @@ class Choss:
         print()
         
         return selected_piece
-
-    # ______________________________ Move Piece _________________________________
     
     # _______________________________ Moving Animation ___________________________
     def moving_animation(self, mouse_pos):
