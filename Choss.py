@@ -117,6 +117,7 @@ class Choss:
             
         # Highlight Moves
         if len(self.left_click_history) == 1:
+            self.highrlight_piece()
             self.highlight_moves()
         # Highrlight Squares
         if len(self.right_click_history) != 0:
@@ -155,8 +156,10 @@ class Choss:
                 return
             
             self.selected_piece = self.left_click_history[0]
-                
             self.selected_piece.moves()
+            self.game_board.remove_move_over_piece(self.selected_piece)
+            self.game_board.remove_move_colour(self.selected_piece)
+
             for element in self.selected_piece.list_moves:
                 board_pos_row = element[0]
                 board_pos_col = element[1]
@@ -178,7 +181,7 @@ class Choss:
             board_pos_col = element.get_col()
             pygame.draw.rect(
                 self.screen_game,
-                self.settings.square_colour_move,
+                self.settings.square_colour_highlight,
                 [
                     self.settings.grid_width * board_pos_col,
                     self.settings.grid_height * board_pos_row,
@@ -186,6 +189,20 @@ class Choss:
                     self.settings.grid_height,
                 ],
             ) 
+            
+    def highrlight_piece(self) -> None:
+        self.selected_piece = self.left_click_history[0]
+        pygame.draw.rect(
+            self.screen_game,
+            self.settings.square_colour_piece,
+            [
+                self.settings.grid_width * self.selected_piece.get_col(),
+                self.settings.grid_height * self.selected_piece.get_row(),
+                self.settings.grid_width,
+                self.settings.grid_height,
+            ],
+        )  
+        
             
     # ________________________________ Draw Pieces _______________________________
     def draw_pieces(self) -> None:
