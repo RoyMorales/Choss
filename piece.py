@@ -19,7 +19,7 @@ class Piece:
         NONE -> E | *
     """
 
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         self.row_number = position[0]
         self.col_number = position[1]
         self._player = player
@@ -32,19 +32,23 @@ class Piece:
     
     def get_pos(self) -> tuple:
         return (self.row_number, self.col_number)
-
+    
     def get_player(self) -> Player:
         return self._player
 
-    def change_row(self, new_row):
+    def change_pos(self, position: tuple[int, int]):
+        self.row_number = position[0]
+        self.col_number = position[1]
+
+    def change_row(self, new_row: int):
         self.row_number = new_row
 
-    def change_col(self, new_col):
+    def change_col(self, new_col: int):
         self.col_number = new_col
 
 
 class Rook(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "R"
         self.list_moves = []
@@ -59,7 +63,7 @@ class Rook(Piece):
         else:
             print("Rook image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
     
     def moves(self):
@@ -73,11 +77,10 @@ class Rook(Piece):
 
 
 class Knight(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "H"
         self.list_moves = []
-
 
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/knight_white.png")
@@ -86,7 +89,7 @@ class Knight(Piece):
         else:
             print("Knight image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
     
     def moves(self):
@@ -96,7 +99,7 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "B"
         self.list_moves = []
@@ -108,7 +111,7 @@ class Bishop(Piece):
         else:
             print("Bishop image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
     
     def moves(self):
@@ -122,7 +125,7 @@ class Bishop(Piece):
 
 
 class Pawn(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "P"
         self.list_moves = []
@@ -137,7 +140,7 @@ class Pawn(Piece):
         else:
             print("Pawn image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
     def moves(self):
@@ -160,7 +163,7 @@ class Pawn(Piece):
   
 
 class Queen(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "Q"
         self.list_moves = []
@@ -172,10 +175,10 @@ class Queen(Piece):
         else:
             print("Queen image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
     
-    def moves(self) -> list:
+    def moves(self):
         # X movement
         relative_moves = []
         for i in range(-7, 8):
@@ -189,7 +192,7 @@ class Queen(Piece):
 
 
 class King(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "K"
         self.list_moves = []
@@ -203,26 +206,25 @@ class King(Piece):
         else:
             print("King image not found!")
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def moves(self) -> list:
+    def moves(self):
         relative_moves = []
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
                     relative_moves.append((i, j))
         self.list_moves = absolute_moves(self, relative_moves)
-
-
+        
 
 class No_Piece(Piece):
-    def __init__(self, position, player):
+    def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
         self._name = "*"
         self.list_moves = []
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
     def moves(self) :
