@@ -56,6 +56,10 @@ class Board:
     def get_piece(self, position: tuple) -> object:
         return self.board[position[0]][position[1]]
     
+    def set_piece(self, position: tuple, piece: object):
+        self.board[position[0]][position[1]] = piece
+        piece
+    
     # ____________________________ Print Console Board__________________________
     def print_board(self) -> None:
         for row in range(len(self.board)):
@@ -91,17 +95,103 @@ class Board:
 
     #_________________________________Remove Move over Pieces ___________________
     # For Rooks Bishops Queen
+    # Ulgy ass shit
+    # Extremely bad written
+    # pew pew
     def remove_move_over_piece(self, piece: object):
+        piece_moves = piece.list_moves
+        piece_col = piece.get_col()
+        piece_row = piece.get_row()
+
+        
         if piece._name == "R":
-            piece_pos = piece.get_pos()
-            piece_moves = piece.list_moves
+            moves_col_positive = []
+            moves_col_negative = []
+            moves_row_positive = []
+            moves_row_negative = []
             
-            print(piece_moves)
-                        
+            for move in piece_moves:
+                if move[0] == piece_row:
+                    if move[1] > piece_col:
+                        moves_row_positive.append(move)
+                    elif move [1] < piece_col:
+                        moves_row_negative.append(move)
+                elif move[1] == piece_col:
+                    if move[0] > piece_col:
+                        moves_col_positive.append(move)    
+                    elif move[0] < piece_col:
+                        moves_col_negative.append(move)
+            
+            moves_row_plus = []
+            for index in range(len(moves_row_positive)):
+                move = moves_row_positive[index]
+                if self.board[piece_row][move[1]]._name == "*":
+                    moves_row_plus.append(move)
+    
+                elif self.board[piece_row][move[1]]._player != piece._player:
+                    moves_row_plus.append(move)
+                    break
+                
+            moves_row_minus = []
+            moves_row_negative.reverse()
+            for index in range(len(moves_row_negative)):
+                move = moves_row_negative[index]
+                if self.board[piece_row][move[1]]._name == "*":
+                    moves_row_minus.append(move)
+    
+                elif self.board[piece_row][move[1]]._player != piece._player:
+                    moves_row_minus.append(move)
+                    break
 
-
+            moves_col_plus = []
+            for index in range(len(moves_col_positive)):
+                move = moves_col_positive[index]
+                if self.board[move[0]][piece_col]._name == "*":
+                    moves_col_plus.append(move)
+    
+                elif self.board[move[0]][piece_col]._player != piece._player:
+                    moves_col_plus.append(move)
+                    break
+            
+            moves_col_minus = []
+            moves_col_negative.reverse()
+            for index in range(len(moves_col_negative)):
+                move = moves_col_negative[index]
+                if self.board[move[0]][piece_col]._name == "*":
+                    moves_col_minus.append(move)
+    
+                elif self.board[move[0]][piece_col]._player != piece._player:
+                    moves_col_minus.append(move)
+                    break
+            
+            piece.list_moves = moves_col_minus + moves_col_plus + moves_row_minus + moves_row_positive
+            print(piece.list_moves)
+            
         elif piece._name == "B":
-            print("ToDo!")
+            moves_diag_1 = []
+            moves_diag_2 = []
+            moves_diag_3 = []
+            moves_diag_4 = []
+            
+            for move in piece_moves:
+                if move[1] > piece_col:
+                    if move[0] < piece_row:
+                        moves_diag_1.append(move)
+                    elif move[0] > piece_row:
+                        moves_diag_4.append(move)
+                        
+                elif move[1] < piece_col:
+                    if move[0] < piece_row:
+                        moves_diag_2.append(move)
+                    elif move[0] > piece_row:
+                        moves_diag_3.append(move)
+                        
+            
+                        
+        
+            
+
+
         elif piece._name == "Q":
             print("ToDo!")
 
