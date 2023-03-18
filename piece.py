@@ -8,7 +8,7 @@ from util import absolute_moves
 class Piece:
     """
     Super Class for Pieces
-
+    
     Pieces:
         Pawn -> P
         Rook -> R
@@ -56,6 +56,7 @@ class Rook(Piece):
         # Castlings Stuff
         self.castle = True
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/rook_white.png")
         elif self._player == Player.BLACK:
@@ -66,6 +67,7 @@ class Rook(Piece):
     def get_name(self) -> str:
         return self._name
     
+    # Rook Piece can move horizontally or vertically in all directions 
     def moves(self):
         relative_moves = []
         for i in range(-7, 8):
@@ -82,6 +84,7 @@ class Knight(Piece):
         self._name = "H"
         self.list_moves = []
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/knight_white.png")
         elif self._player == Player.BLACK:
@@ -92,8 +95,8 @@ class Knight(Piece):
     def get_name(self) -> str:
         return self._name
     
+    # Knight Piece can move in L shape in all directions
     def moves(self):
-        # L movement
         relative_moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2)]
         self.list_moves = absolute_moves(self, relative_moves)
 
@@ -104,6 +107,7 @@ class Bishop(Piece):
         self._name = "B"
         self.list_moves = []
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/bishop_white.png")
         elif self._player == Player.BLACK:
@@ -114,8 +118,8 @@ class Bishop(Piece):
     def get_name(self) -> str:
         return self._name
     
+    # Bishop Piece can move in the diagonal in all directions
     def moves(self):
-        # X movement
         relative_moves = []
         for i in range(-7, 8):
             if i != 0:
@@ -129,10 +133,12 @@ class Pawn(Piece):
         super().__init__(position, player)
         self._name = "P"
         self.list_moves = []
+        self.list_attack = []
 
         # First Move 2 Squares
         self.piece_moved = False
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/pawn_white.png")
         elif self._player == Player.BLACK:
@@ -143,6 +149,9 @@ class Pawn(Piece):
     def get_name(self) -> str:
         return self._name
 
+    # Pawn Piece can only move in horizontal 
+    # Pawn Piece can move one or two squares in the first move
+    # Pawn Piece can only move one square after the first move
     def moves(self):
         if self._player == Player.WHITE:
             if self.piece_moved == False:
@@ -160,6 +169,16 @@ class Pawn(Piece):
                 print("Somethin Wrong lol - Invalid Move")
     
         self.list_moves = absolute_moves(self, relative_moves)
+    
+    # Pawn Piece can only attack the the first square on the diagonal in front of it
+    def can_attack(self):
+        if self._player == Player.WHITE:
+            relative_moves = [(-1, -1), (-1, 1)]
+        elif self._player == Player.BLACK:
+            relative_moves = [(1, 1), (1, -1)]
+        
+        self.list_attack = absolute_moves(self, relative_moves)
+            
   
 
 class Queen(Piece):
@@ -168,6 +187,7 @@ class Queen(Piece):
         self._name = "Q"
         self.list_moves = []
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/queen_white.png")
         elif self._player == Player.BLACK:
@@ -178,8 +198,8 @@ class Queen(Piece):
     def get_name(self) -> str:
         return self._name
     
+    # Queen Piece can move as the combination of the Rook Piece and Bishop Piece
     def moves(self):
-        # X movement
         relative_moves = []
         for i in range(-7, 8):
             if i != 0:
@@ -199,6 +219,7 @@ class King(Piece):
         
         self.castle = True
 
+        # Image for the Piece White or Black
         if self._player == Player.WHITE:
             self.piece_image = pygame.image.load("./resources/king_white.png")
         elif self._player == Player.BLACK:
@@ -209,6 +230,7 @@ class King(Piece):
     def get_name(self) -> str:
         return self._name
 
+    # King Piece can only move one square in all directions
     def moves(self):
         relative_moves = []
         for i in range(-1, 2):
@@ -218,6 +240,8 @@ class King(Piece):
         self.list_moves = absolute_moves(self, relative_moves)
         
 
+# No_Piece acts as a empty space
+# Needed for simplicity of the code and as a reference
 class No_Piece(Piece):
     def __init__(self, position: tuple[int, int], player: Player):
         super().__init__(position, player)
@@ -227,5 +251,6 @@ class No_Piece(Piece):
     def get_name(self) -> str:
         return self._name
 
+    # No_Piece has no moves
     def moves(self) :
         self.list_moves = []
