@@ -52,9 +52,13 @@ class Rook(Piece):
         super().__init__(position, player)
         self._name = "R"
         self.list_moves = []
+        self.relative_moves = []
 
         # Castlings Stuff
         self.castle = True
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -68,13 +72,17 @@ class Rook(Piece):
         return self._name
     
     # Rook Piece can move horizontally or vertically in all directions 
-    def moves(self):
-        relative_moves = []
+    def relative_move(self):
+        moves = []
         for i in range(-7, 8):
             if i != 0:
-                relative_moves.append((0, i))
-                relative_moves.append((i, 0))
-        self.list_moves = absolute_moves(self, relative_moves)
+                moves.append((0, i))
+                moves.append((i, 0))
+        self.relative_moves = moves
+        
+    # Updates list of moves possible for the piece in the given position
+    def moves(self):    
+        self.list_moves = absolute_moves(self)
 
 
 
@@ -83,6 +91,10 @@ class Knight(Piece):
         super().__init__(position, player)
         self._name = "H"
         self.list_moves = []
+        self.relative_moves = []
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -96,9 +108,12 @@ class Knight(Piece):
         return self._name
     
     # Knight Piece can move in L shape in all directions
+    def relative_move(self):
+        self.relative_moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2)]
+    
+    # Updates list of moves possible for the piece in the given position
     def moves(self):
-        relative_moves = [(-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2)]
-        self.list_moves = absolute_moves(self, relative_moves)
+        self.list_moves = absolute_moves(self)
 
 
 class Bishop(Piece):
@@ -106,6 +121,10 @@ class Bishop(Piece):
         super().__init__(position, player)
         self._name = "B"
         self.list_moves = []
+        self.relative_moves = []
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -119,13 +138,17 @@ class Bishop(Piece):
         return self._name
     
     # Bishop Piece can move in the diagonal in all directions
-    def moves(self):
-        relative_moves = []
+    def relative_move(self):
+        moves = []
         for i in range(-7, 8):
             if i != 0:
-                relative_moves.append((i, i))
-                relative_moves.append((i, -i))
-        self.list_moves = absolute_moves(self, relative_moves)
+                moves.append((i, i))
+                moves.append((i, -i))
+        self.relative_moves = moves        
+    
+    # Updates list of moves possible for the piece in the given position
+    def moves(self):
+        self.list_moves = absolute_moves(self)
 
 
 class Pawn(Piece):
@@ -134,9 +157,13 @@ class Pawn(Piece):
         self._name = "P"
         self.list_moves = []
         self.list_attack = []
+        self.relative_moves = []
 
         # First Move 2 Squares
         self.piece_moved = False
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -152,32 +179,32 @@ class Pawn(Piece):
     # Pawn Piece can only move in horizontal 
     # Pawn Piece can move one or two squares in the first move
     # Pawn Piece can only move one square after the first move
-    def moves(self):
+    def relative_move(self):
         if self._player == Player.WHITE:
             if self.piece_moved == False:
-                relative_moves = [(-1, 0), (-2, 0)]
+                moves = [(-1, 0), (-2, 0)]
             elif self.piece_moved == True:
-                relative_moves = [(-1, 0)]
-            else:
-                print("Somethin Wrong lol - Invalid Move")
+                moves = [(-1, 0)]
+
         elif self._player == Player.BLACK:
             if self.piece_moved == False:
-                relative_moves = [(1, 0), (2, 0)]
+                moves = [(1, 0), (2, 0)]
             elif self.piece_moved == True:
-                relative_moves = [(1, 0)]
-            else:
-                print("Somethin Wrong lol - Invalid Move")
-    
-        self.list_moves = absolute_moves(self, relative_moves)
+                moves = [(1, 0)]
+        self.relative_moves = moves
     
     # Pawn Piece can only attack the the first square on the diagonal in front of it
-    def can_attack(self):
+    def attack_move(self):
         if self._player == Player.WHITE:
             relative_moves = [(-1, -1), (-1, 1)]
         elif self._player == Player.BLACK:
             relative_moves = [(1, 1), (1, -1)]
         
-        self.list_attack = absolute_moves(self, relative_moves)
+        self.list_attack = absolute_moves(self)
+        
+    # Updates list of moves possible for the piece in the given position
+    def moves(self):
+        self.list_moves = absolute_moves(self)
             
   
 
@@ -186,6 +213,10 @@ class Queen(Piece):
         super().__init__(position, player)
         self._name = "Q"
         self.list_moves = []
+        self.relative_moves = []
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -199,16 +230,19 @@ class Queen(Piece):
         return self._name
     
     # Queen Piece can move as the combination of the Rook Piece and Bishop Piece
-    def moves(self):
-        relative_moves = []
+    def relative_move(self):
+        moves = []
         for i in range(-7, 8):
             if i != 0:
-                relative_moves.append((0, i))
-                relative_moves.append((i, 0))
-                relative_moves.append((i, i))
-                relative_moves.append((i, -i))
-                
-        self.list_moves = absolute_moves(self, relative_moves)
+                moves.append((0, i))
+                moves.append((i, 0))
+                moves.append((i, i))
+                moves.append((i, -i))
+        self.relative_moves = moves
+    
+    # Updates list of moves possible for the piece in the given position
+    def moves(self):
+        self.list_moves = absolute_moves(self)
 
 
 class King(Piece):
@@ -216,8 +250,13 @@ class King(Piece):
         super().__init__(position, player)
         self._name = "K"
         self.list_moves = []
+        self.relative_moves = []
         
+        # Speical rules stuff
         self.castle = True
+        
+        # Set Piece Movement
+        self.relative_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
@@ -231,13 +270,17 @@ class King(Piece):
         return self._name
 
     # King Piece can only move one square in all directions
-    def moves(self):
-        relative_moves = []
+    def relative_move(self):
+        moves = []
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
-                    relative_moves.append((i, j))
-        self.list_moves = absolute_moves(self, relative_moves)
+                    moves.append((i, j))
+        self.relative_moves = moves
+
+    # Updates list of moves possible for the piece in the given position       
+    def moves(self):
+        self.list_moves = absolute_moves(self)
         
 
 # No_Piece acts as a empty space

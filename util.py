@@ -1,18 +1,28 @@
+# Imports
+from settings import SettingsClass
 
-def absolute_moves(object, relative_moves) -> list:
+# Used varibles
+settings = SettingsClass()
+
+# Some usefull function
+
+# Function used in piece
+def absolute_moves(piece: object) -> list[tuple]:
+    """Takes the list of the relatives moves of the given piece 
+    and return the a list of absolute moves in the chess board 
+
+    Args:
+        piece (object): Any Chess Piece
+
+    Returns:
+        List of tuple(row, collumn) with the absolute moves in the chess board
+    """
     absolute_moves = []
-    for element in relative_moves:
-        move_row = element[0]
-        move_col = element[1]
+    for element in piece.relative_moves:
+        new_position_row = element[0] + piece.get_row()
+        new_position_col = element[1] + piece.get_col()
         
-        position_row = object.get_row()
-        position_col = object.get_col()
-        
-        new_position_row = position_row + move_row
-        new_position_col = position_col + move_col
-        
-        
-        if 0 <= new_position_row < 8 and 0 <= new_position_col < 8:
+        if 0 <= new_position_row < settings.number_squares and 0 <= new_position_col < settings.number_squares:
             new_position = (new_position_row, new_position_col)
             absolute_moves.append(new_position)
                     
