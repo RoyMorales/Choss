@@ -22,6 +22,7 @@ class Choss:
         self.game_board = Board()
         self.selected_piece_moving = False
         self.selected_piece = None
+        self.player_turn = self.game_board.player_turn
         # Empty Space
         self.No_Piece_Ref = No_Piece((-1, -1), Player.NONE)
         
@@ -55,17 +56,19 @@ class Choss:
                 self.right_click_history = []
             else:
                 if  len(self.left_click_history) == 0:
-                    if piece_selected._name != self.No_Piece_Ref._name:
+                    if piece_selected._name != self.No_Piece_Ref._name and piece_selected._player == self.player_turn:
                         self.left_click_history.append(piece_selected) 
 
                 elif len(self.left_click_history) == 1:
-                    self.left_click_history.append(piece_selected)
+                    if piece_selected._player == self.player_turn:
+                        self.left_click_history = [piece_selected]
+                    else:
+                        self.left_click_history.append(piece_selected)
+                        self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
+                        self.player_turn = self.game_board.player_turn
+                        self.left_click_history = []
+                        self.game_board.print_board()
                     
-                    
-                    
-                    self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
-                    self.left_click_history = []
-                    self.game_board.print_board()
     
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == self.RIGHT:
             print("Right Mouse Click: ", mouse_pos)
@@ -76,10 +79,6 @@ class Choss:
                 self.right_click_history.append(piece_selected)
                 self.highlight_squares()
                 
-    #elif event.type == pygame.MOUSEMOTION and self.selected_piece_moving == True:
-    #    self.moving_animation(mouse_pos)
-
-
     # ________________________________ Draw Board _______________________________
     def draw_board(self) -> None:
         # Draw Initial Black
