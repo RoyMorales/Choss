@@ -7,18 +7,19 @@ settings = SettingsClass()
 # Some usefull function
 
 # Function used in piece
-def absolute_moves(piece: object) -> list[tuple]:
+def absolute_moves(piece: object, list_moves: list) -> list[tuple]:
     """Takes the list of the relatives moves of the given piece 
     and return the a list of absolute moves in the chess board 
 
     Args:
         piece (object): Any Chess Piece
+        list_moves (list): List of tuple with the possble position of the piece
 
     Returns:
         List of tuple(row, collumn) with the absolute moves in the chess board
     """
     absolute_moves = []
-    for element in piece.relative_moves:
+    for element in list_moves:
         new_position_row = element[0] + piece.get_row()
         new_position_col = element[1] + piece.get_col()
         

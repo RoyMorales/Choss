@@ -82,7 +82,7 @@ class Rook(Piece):
         
     # Updates list of moves possible for the piece in the given position
     def moves(self):    
-        self.list_moves = absolute_moves(self)
+        self.list_moves = absolute_moves(self, self.relative_moves)
 
 
 
@@ -113,7 +113,7 @@ class Knight(Piece):
     
     # Updates list of moves possible for the piece in the given position
     def moves(self):
-        self.list_moves = absolute_moves(self)
+        self.list_moves = absolute_moves(self, self.relative_moves)
 
 
 class Bishop(Piece):
@@ -148,7 +148,7 @@ class Bishop(Piece):
     
     # Updates list of moves possible for the piece in the given position
     def moves(self):
-        self.list_moves = absolute_moves(self)
+        self.list_moves = absolute_moves(self, self.relative_moves)
 
 
 class Pawn(Piece):
@@ -200,12 +200,13 @@ class Pawn(Piece):
         elif self._player == Player.BLACK:
             relative_moves = [(1, 1), (1, -1)]
         
-        self.list_attack = absolute_moves(self)
+        self.list_attack = absolute_moves(self, relative_moves)
         
     # Updates list of moves possible for the piece in the given position
     def moves(self):
-        self.list_moves = absolute_moves(self)
-            
+        self.relative_move()
+        self.attack_move()
+        self.list_moves = absolute_moves(self, self.relative_moves)
   
 
 class Queen(Piece):
@@ -242,7 +243,7 @@ class Queen(Piece):
     
     # Updates list of moves possible for the piece in the given position
     def moves(self):
-        self.list_moves = absolute_moves(self)
+        self.list_moves = absolute_moves(self, self.relative_moves)
 
 
 class King(Piece):
@@ -280,7 +281,7 @@ class King(Piece):
 
     # Updates list of moves possible for the piece in the given position       
     def moves(self):
-        self.list_moves = absolute_moves(self)
+        self.list_moves = absolute_moves(self, self.relative_moves)
         
 
 # No_Piece acts as a empty space

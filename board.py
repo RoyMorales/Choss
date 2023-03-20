@@ -362,6 +362,27 @@ class Board:
                 + moves_row_plus
             )
 
+        elif piece._name == "P":
+            list_moves_player = []
+            for move in piece.list_moves:
+                if self.board[move[0]][move[1]]._name == "*":
+                    list_moves_player.append(move)
+                else:
+                    break
+            piece.list_moves = list_moves_player
+            self.pawn_attack(piece)
+
+    # _______________________________ Pawn Attack __________________________
+    def pawn_attack(self, piece):
+        print("List Moves: ", piece.list_moves)
+        print("List Attacks: ", piece.list_attack)
+        list_attacks = []
+        for move in piece.list_attack:
+            if self.board[move[0]][move[1]]._player != piece._player and self.board[move[0]][move[1]]._name != '*':
+                list_attacks.append(move)
+        piece.list_moves = piece.list_moves + list_attacks
+        print("List Moves: ", piece.list_moves)
+                
     # _______________________________ Moving Piece __________________________
     def move_piece(self, piece_to_move, new_position):
         piece_to_move_row = piece_to_move.get_row()
@@ -386,6 +407,7 @@ class Board:
             # Pawn First Move
             if piece_to_move._name == "P":
                 piece_to_move.piece_moved = True
+    
             # King First Move
             elif piece_to_move._name == "K":
                 piece_to_move.castle == False
