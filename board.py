@@ -73,7 +73,7 @@ class Board:
         if self.player_turn == Player.WHITE:
             self.player_turn = Player.BLACK
         elif self.player_turn == Player.BLACK:
-            self.player_turn == Player.WHITE
+            self.player_turn = Player.WHITE
 
     # _______________________________ Remove Piece Move Same Color_______________
     # Remove from piece moves prohibited moves
@@ -115,39 +115,7 @@ class Board:
             if self.board[move[0]][move[1]]._player != piece._player and self.board[move[0]][move[1]]._name != '*':
                 list_attacks.append(move)
         piece.list_moves = piece.list_moves + list_attacks
-                
-    # _______________________________ Moving Piece __________________________
-    def move_piece(self, piece_to_move, new_position):
-        piece_to_move_row = piece_to_move.get_row()
-        piece_to_move_col = piece_to_move.get_col()
-
-        new_position_row = new_position.get_row()
-        new_position_col = new_position.get_col()
-
-        piece_to_move = self.board[piece_to_move_row][piece_to_move_col]
-        piece_to_move.moves()
-        self.remove_move_over_piece(piece_to_move)
-        self.remove_move_colour(piece_to_move)
-
-        if self.verify_move_piece(piece_to_move, (new_position_row, new_position_col)):
-            self.board[piece_to_move_row][piece_to_move_col] = No_Piece(
-                (piece_to_move_row, piece_to_move_col), Player.NONE
-            )
-            self.board[new_position_row][new_position_col] = piece_to_move
-            piece_to_move.change_row(new_position_row)
-            piece_to_move.change_col(new_position_col)
-
-            # Pawn First Move
-            if piece_to_move._name == "P":
-                piece_to_move.piece_moved = True
-    
-            # King First Move
-            elif piece_to_move._name == "K":
-                piece_to_move.castle == False
-            # Rook First Move
-            elif piece_to_move._name == "R":
-                piece_to_move.castle == False
-
+        
     # _______________________________ Moving Piece __________________________
     def verify_move_piece(self, piece: object, move: (tuple)):
         piece_moves = piece.list_moves
@@ -156,6 +124,43 @@ class Board:
             return False
         else:
             return True
+        
+    # _______________________________ Moving Piece __________________________
+    def move_piece(self, piece_to_move, new_position):
+        # Piece Selected to move
+        piece_to_move = self.board[piece_to_move.get_row()][piece_to_move.get_col()]
+        
+        # PLayer con only move thier own piece
+        if piece_to_move._player == self.player_turn:
+            piece_to_move.moves()
+            # Remove from piece moves all none possible moves
+            self.remove_move_over_piece(piece_to_move)
+            self.remove_move_colour(piece_to_move)
+
+            # Verify if the move is possible
+            if self.verify_move_piece(piece_to_move, (new_position.get_row(), new_position.get_col())):
+                # Update old position to No_Piece
+                self.board[piece_to_move.get_row()][piece_to_move.get_col()] = No_Piece(
+                    (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
+                )
+                # Update piece to new position
+                self.board[new_position.get_row()][new_position.get_col()] = piece_to_move
+                piece_to_move.change_row(new_position.get_row())
+                piece_to_move.change_col(new_position.get_col())
+
+                # Pawn First Move
+                if piece_to_move._name == "P":
+                    piece_to_move.piece_moved = True
+        
+                # King First Move
+                elif piece_to_move._name == "K":
+                    piece_to_move.castle == False
+                # Rook First Move
+                elif piece_to_move._name == "R":
+                    piece_to_move.castle == False
+                    
+                # Change Player Turn
+                self.switch_player()
 
 
 if __name__ == "__main__":
