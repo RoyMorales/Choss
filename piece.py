@@ -164,6 +164,7 @@ class Pawn(Piece):
         
         # Set Piece Movement
         self.relative_move()
+        self.attack_move()
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
