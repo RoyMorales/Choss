@@ -57,16 +57,21 @@ class Board:
 
     def set_piece(self, position: tuple, piece: object):
         self.board[position[0]][position[1]] = piece
-        piece
 
     # ____________________________ Print Console Board__________________________
     def print_board(self) -> None:
+        print("")
+        print("---------------------------------")
         for row in range(len(self.board)):
             print("| ", end="")
             for element in self.board[row]:
-                print(element._name, end=" | ")
+                if element._name == "*":
+                    print(" ", end=" | ")
+                else:
+                    print(element._name, end=" | ")
             print()
             print("---------------------------------")
+        print("")
 
     # ________________________________ Switch Player ____________________________
     def switch_player(self):
@@ -90,7 +95,7 @@ class Board:
         piece.list_moves = update_list_moves
 
     # _________________________________Remove Move over Pieces ___________________
-    # For Rooks Bishops Queen
+    # For Rooks Bishops Queen Pawn
     def remove_move_over_piece(self, piece: object):
         if piece._name == "R":
             rook_remove_moves(self.board, piece)    
@@ -127,9 +132,6 @@ class Board:
         
     # _______________________________ Moving Piece __________________________
     def move_piece(self, piece_to_move, new_position):
-        # Piece Selected to move
-        piece_to_move = self.board[piece_to_move.get_row()][piece_to_move.get_col()]
-        
         # PLayer con only move thier own piece
         if piece_to_move._player == self.player_turn:
             piece_to_move.moves()
@@ -144,23 +146,60 @@ class Board:
                     (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
                 )
                 # Update piece to new position
-                self.board[new_position.get_row()][new_position.get_col()] = piece_to_move
-                piece_to_move.change_row(new_position.get_row())
-                piece_to_move.change_col(new_position.get_col())
+                self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
+                piece_to_move.change_pos(new_position.get_pos())
 
                 # Pawn First Move
                 if piece_to_move._name == "P":
                     piece_to_move.piece_moved = True
+                    self.promotion(piece_to_move)
         
                 # King First Move
                 elif piece_to_move._name == "K":
                     piece_to_move.castle == False
+                    
                 # Rook First Move
                 elif piece_to_move._name == "R":
                     piece_to_move.castle == False
                     
                 # Change Player Turn
                 self.switch_player()
+    
+    # _______________________________ Promotion Pawn __________________________
+    def promotion(self, piece: Pawn):
+        pawn_row = piece.get_row()
+        
+        # Promote pawn to a queen in row 0 or 7
+        if pawn_row == 0:
+            new_piece = Queen((piece.get_pos()), Player.WHITE)
+            self.board[new_piece.get_row()][new_piece.get_col()] = new_piece
+            
+        elif pawn_row == 7:
+            new_piece = Queen((piece.get_pos), Player.BLACK)
+            self.board[new_piece.get_row()][new_piece.get_col()] = new_piece
+            
+    # _______________________________ Casteling King __________________________
+    def casteling(self, piece_K: King, piece_R: Rook):
+        # left Castle
+        if piece_R.get_col() == 0 and piece_R.piece_moved == False and piece_K.piece_moved == False:
+            for pieces in range(0, 3):
+                if pieces._name == "*":
+                    piece_K.castle_left = True
+                else:
+                    piece_K.castle_left = False
+                    break
+            piece_K.list_moves.append(())
+                
+        # Right Castle
+        if piece_R.get_col() == 7 and piece_R.piece_moved == False and piece_K.piece_moved == False:
+            for pieces in range(5, 8):
+                if pieces._name == "*":
+                    piece_K.castle_right = True
+                else:
+                    piece_K.castle_right = False
+                    break
+        
+            
 
 
 if __name__ == "__main__":
