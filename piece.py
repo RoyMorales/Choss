@@ -55,7 +55,7 @@ class Rook(Piece):
         self.relative_moves = []
 
         # Castlings Stuff
-        self.castle = True
+        self.piece_moved = False
         
         # Set Piece Movement
         self.relative_move()
@@ -255,7 +255,9 @@ class King(Piece):
         self.relative_moves = []
         
         # Speical rules stuff
-        self.castle = True
+        self.piece_moved = False
+        self.castle_left = False
+        self.castle_right = False
         
         # Set Piece Movement
         self.relative_move()
@@ -279,6 +281,18 @@ class King(Piece):
                 if i != 0 or j != 0:
                     moves.append((i, j))
         self.relative_moves = moves
+    
+    # Caslting left
+    def left_castle_move(self):
+        move = absolute_moves(self, [(0, -1)])
+        if self.castle_left == True:
+            self.list_moves = self.list_moves + move
+
+    # Caslting Right
+    def left_castle_move(self):
+        move = absolute_moves(self, [(0, 1)])
+        if self.castle_right == True:
+            self.list_moves = self.list_moves + move
 
     # Updates list of moves possible for the piece in the given position       
     def moves(self):
