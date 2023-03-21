@@ -161,6 +161,9 @@ class Choss:
             self.selected_piece.moves()
             self.game_board.remove_move_over_piece(self.selected_piece)
             self.game_board.remove_move_colour(self.selected_piece)
+            
+            if self.left_click_history[0]._name == "K":
+                self.game_board.casteling(self.left_click_history[0])
 
             for element in self.selected_piece.list_moves:
                 board_pos_row = element[0]

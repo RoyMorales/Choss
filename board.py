@@ -138,9 +138,30 @@ class Board:
             # Remove from piece moves all none possible moves
             self.remove_move_over_piece(piece_to_move)
             self.remove_move_colour(piece_to_move)
+            
+            if piece_to_move._name == 'K':
+                if piece_to_move.piece_moved == False:
+                    self.casteling(piece_to_move)
 
             # Verify if the move is possible
             if self.verify_move_piece(piece_to_move, (new_position.get_row(), new_position.get_col())):
+                 # King First Move
+                if piece_to_move._name == "K":
+                    if piece_to_move.piece_moved == False:
+                        print("HERE")
+                        print("Castle Moves: ",piece_to_move.castle_moves)
+                        print("Move: ", (new_position.get_row(), new_position.get_col()))
+                        
+                        if (new_position.get_row(), new_position.get_col()) in piece_to_move.castle_moves:
+                            self.move_castling((new_position.get_row(), new_position.get_col()))
+                            
+                            # Change Player Turn
+                            piece_to_move.piece_moved == True
+                            new_position.piece_moved == True
+                            self.switch_player()
+                            return
+                             
+                    
                 # Update old position to No_Piece
                 self.board[piece_to_move.get_row()][piece_to_move.get_col()] = No_Piece(
                     (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
@@ -148,20 +169,19 @@ class Board:
                 # Update piece to new position
                 self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
                 piece_to_move.change_pos(new_position.get_pos())
-
+                    
                 # Pawn First Move
                 if piece_to_move._name == "P":
                     piece_to_move.piece_moved = True
-                    self.promotion(piece_to_move)
-        
-                # King First Move
+                    self.promotion(piece_to_move)   
+                
                 elif piece_to_move._name == "K":
-                    piece_to_move.castle == False
-                    
+                    piece_to_move.piece_moved == True
+
                 # Rook First Move
                 elif piece_to_move._name == "R":
-                    piece_to_move.castle == False
-                    
+                    piece_to_move.piece_moved == True        
+            
                 # Change Player Turn
                 self.switch_player()
     
@@ -178,28 +198,120 @@ class Board:
             new_piece = Queen((piece.get_pos), Player.BLACK)
             self.board[new_piece.get_row()][new_piece.get_col()] = new_piece
             
-    # _______________________________ Casteling King __________________________
-    def casteling(self, piece_K: King, piece_R: Rook):
-        # left Castle
-        if piece_R.get_col() == 0 and piece_R.piece_moved == False and piece_K.piece_moved == False:
-            for pieces in range(0, 3):
-                if pieces._name == "*":
-                    piece_K.castle_left = True
-                else:
-                    piece_K.castle_left = False
-                    break
-            piece_K.list_moves.append(())
-                
-        # Right Castle
-        if piece_R.get_col() == 7 and piece_R.piece_moved == False and piece_K.piece_moved == False:
-            for pieces in range(5, 8):
-                if pieces._name == "*":
-                    piece_K.castle_right = True
-                else:
-                    piece_K.castle_right = False
-                    break
+    # _______________________________ Casteling Calculation Move __________________________
+    def casteling(self, king: King):
+        white_left_rook = self.board[7][0]
+        white_right_rook = self.board[7][7]
         
+        black_left_rook = self.board[0][0]
+        black_right_rook = self.board[0][7]
+        
+        # left Castle
+        if white_left_rook._name == "R":
+            if white_left_rook.piece_moved == False and king.piece_moved == False and king._player == Player.WHITE:
+                for col in range(1, 4):
+                    if self.board[7][col]._name == "*":
+                        king.castle_left = True
+                    else:
+                        king.castle_left = False
+                        break
+        
+        # Right Castle
+        if white_right_rook._name == "R":
+            if white_right_rook.piece_moved == False and king.piece_moved == False and king._player == Player.WHITE:
+                for col in range(5, 7):
+                    if self.board[7][col]._name == "*":
+                        king.castle_right = True
+                    else:
+                        king.castle_right = False
+                        break
+                    
+        # left Castle
+        if black_left_rook._name == "R":
+            if black_left_rook.piece_moved == False and king.piece_moved == False and king._player == Player.BLACK:
+                for col in range(1, 4):
+                    if self.board[0][col]._name == "*":
+                        king.castle_left = True
+                    else:
+                        king.castle_left = False
+                        break
+        
+        # Right Castle
+        if black_right_rook._name == "R":
+            if black_right_rook.piece_moved == False and king.piece_moved == False and king._player == Player.BLACK:
+                for col in range(5, 7):
+                    if self.board[0][col]._name == "*":
+                        king.castle_right = True
+                    else:
+                        king.castle_right = False
+                        break
+        
+        if king.castle_left == True and king._player == Player.WHITE:
+            move = (7, 2)
+            king.list_moves.append(move)
+            if move not in king.castle_moves:
+                king.castle_moves.append((7,2))
+        if king.castle_right == True and king._player == Player.WHITE:
+            move = (7, 6)
+            king.list_moves.append(move)
+            if move not in king.castle_moves:
+                king.castle_moves.append((7,6))
             
+        if king.castle_left == True and king._player == Player.BLACK:
+            move = (0, 2)
+            king.list_moves.append((0,2))
+            if (0,2) not in king.castle_moves:
+                king.castle_moves.append((0,2))
+        if king.castle_right == True and king._player == Player.BLACK:
+            move = (0, 6)
+            king.list_moves.append((0,6))
+            if (0,6) not in king.castle_moves:
+                king.castle_moves.append((0,6))
+
+    # _______________________________ Casteling Move __________________________
+    def move_castling(self, move):
+        # White Left
+        if self.board[7][0].piece_moved == False and self.board[7][4].piece_moved == False:
+            if move == (7,2):
+                self.board[7][0] = No_Piece((7,0), Player.NONE)    
+                self.board[7][4] = No_Piece((7,4), Player.NONE)    
+                self.board[7][3] = Rook((7, 3), Player.WHITE)
+                self.board[7][2] = King((7,2), Player.WHITE)
+                
+                self.board[7][3].piece_moved = True
+                self.board[7][2].piece_moved = True
+
+        # White Right
+        if self.board[7][7].piece_moved == False and self.board[7][4].piece_moved == False:
+            if move == (7,6):
+                self.board[7][7] = No_Piece((7,7), Player.NONE)    
+                self.board[7][4] = No_Piece((7,4), Player.NONE)    
+                self.board[7][5] = Rook((7, 5), Player.WHITE)
+                self.board[7][6] = King((7,6), Player.WHITE)
+                
+                self.board[7][5].piece_moved = True
+                self.board[7][6].piece_moved = True
+        # Black Left
+        if self.board[0][0].piece_moved == False and self.board[0][4].piece_moved == False:
+            if move == (0,2):
+                self.board[0][0] = No_Piece((0,0), Player.NONE)    
+                self.board[0][4] = No_Piece((0,4), Player.NONE)    
+                self.board[0][3] = Rook((0, 3), Player.BLACK)
+                self.board[0][2] = King((0,2), Player.BLACK)
+                
+                self.board[0][3].piece_moved = True
+                self.board[0][2].piece_moved = True
+        #Black Right
+        if self.board[0][7].piece_moved == False and self.board[0][4].piece_moved == False:
+            if move == (0,6):
+                self.board[0][7] = No_Piece((0,7), Player.NONE)    
+                self.board[0][4] = No_Piece((0,4), Player.NONE)    
+                self.board[0][5] = Rook((0, 5), Player.BLACK)
+                self.board[0][6] = King((0,6), Player.BLACK)
+                
+                self.board[0][5].piece_moved = True
+                self.board[0][6].piece_moved = True
+        
 
 
 if __name__ == "__main__":

@@ -253,6 +253,7 @@ class King(Piece):
         self._name = "K"
         self.list_moves = []
         self.relative_moves = []
+        self.castle_moves = []
         
         # Speical rules stuff
         self.piece_moved = False
@@ -306,6 +307,7 @@ class No_Piece(Piece):
         super().__init__(position, player)
         self._name = "*"
         self.list_moves = []
+        self.piece_moved = True
 
     def get_name(self) -> str:
         return self._name
