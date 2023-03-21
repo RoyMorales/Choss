@@ -23,6 +23,7 @@ class Choss:
         self.selected_piece_moving = False
         self.selected_piece = None
         self.player_turn = self.game_board.player_turn
+        self.player_change = None
         # Empty Space
         self.No_Piece_Ref = No_Piece((-1, -1), Player.NONE)
         
@@ -38,6 +39,11 @@ class Choss:
             self.check_event()
             self.draw_board()
             self.draw_pieces()
+            self.player_change = self.game_board.player_change
+            
+            # Single Calculation of pieces moves
+            if self.player_change == None:
+                self.game_board.set_pieces_moves()
             
             pygame.display.update()
 
@@ -246,6 +252,7 @@ class Choss:
         return selected_piece
     
     # _______________________________ Moving Animation ___________________________
+    # Not implemented
     def moving_animation(self, mouse_pos):
         if self.selected_piece == None:
             print("Can not move None Piece")

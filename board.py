@@ -11,6 +11,7 @@ class Board:
 
         # Set first player
         self.player_turn = Player.WHITE
+        self.player_change = None
 
         # Inicialize Board
         self.board = []
@@ -75,6 +76,9 @@ class Board:
 
     # ________________________________ Switch Player ____________________________
     def switch_player(self):
+        # Prevents multiple pieces moves calculation
+        self.player_change == None
+        
         if self.player_turn == Player.WHITE:
             self.player_turn = Player.BLACK
         elif self.player_turn == Player.BLACK:
@@ -120,7 +124,27 @@ class Board:
             if self.board[move[0]][move[1]]._player != piece._player and self.board[move[0]][move[1]]._name != '*':
                 list_attacks.append(move)
         piece.list_moves = piece.list_moves + list_attacks
+    
+    # _______________________________Set pieces moves_______________________ 
+    def set_pieces_moves(self):
+        # Preveents multiple calculations
+        if self.player_change != None:
+            return
         
+        for row in range(len(self.board)):
+            for col in range(len(self.board)):
+                piece = self.board[row][col]
+                # Set all pieces moves
+                piece.moves()
+                # Remove impossible moves
+                self.remove_move_over_piece(piece)
+                self.remove_move_colour(piece)
+                
+                # Special moves
+                if piece._name == 'K':
+                    self.casteling(piece)
+                self.player_change = self.player_turn
+                
     # _______________________________ Moving Piece __________________________
     def verify_move_piece(self, piece: object, move: (tuple)):
         piece_moves = piece.list_moves
@@ -134,57 +158,38 @@ class Board:
     def move_piece(self, piece_to_move, new_position):
         # PLayer con only move thier own piece
         if piece_to_move._player == self.player_turn:
-            piece_to_move.moves()
-            # Remove from piece moves all none possible moves
-            self.remove_move_over_piece(piece_to_move)
-            self.remove_move_colour(piece_to_move)
-            
-            if piece_to_move._name == 'K':
-                if piece_to_move.piece_moved == False:
-                    self.casteling(piece_to_move)
-
             # Verify if the move is possible
             if self.verify_move_piece(piece_to_move, (new_position.get_row(), new_position.get_col())):
                  # King First Move
                 if piece_to_move._name == "K":
-                    if piece_to_move.piece_moved == False:
-                        print("HERE")
-                        print("Castle Moves: ",piece_to_move.castle_moves)
-                        print("Move: ", (new_position.get_row(), new_position.get_col()))
-                        
-                        if (new_position.get_row(), new_position.get_col()) in piece_to_move.castle_moves:
+                    if piece_to_move.piece_moved == False and  (new_position.get_row(), new_position.get_col()) in piece_to_move.castle_moves:
                             self.move_castling((new_position.get_row(), new_position.get_col()))
                             
-                            # Change Player Turn
-                            piece_to_move.piece_moved == True
-                            new_position.piece_moved == True
-                            self.switch_player()
-                            return
-                             
+                else:      
+                    # Update old position to No_Piece
+                    self.board[piece_to_move.get_row()][piece_to_move.get_col()] = No_Piece(
+                        (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
+                    )
+                    # Update piece to new position
+                    self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
+                    piece_to_move.change_pos(new_position.get_pos())
+                        
+                    # Pawn First Move
+                    if piece_to_move._name == "P":
+                        piece_to_move.piece_moved = True
+                        self.promotion(piece_to_move)   
                     
-                # Update old position to No_Piece
-                self.board[piece_to_move.get_row()][piece_to_move.get_col()] = No_Piece(
-                    (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
-                )
-                # Update piece to new position
-                self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
-                piece_to_move.change_pos(new_position.get_pos())
-                    
-                # Pawn First Move
-                if piece_to_move._name == "P":
-                    piece_to_move.piece_moved = True
-                    self.promotion(piece_to_move)   
-                
-                elif piece_to_move._name == "K":
-                    piece_to_move.piece_moved == True
+                    elif piece_to_move._name == "K":
+                        piece_to_move.piece_moved == True
 
-                # Rook First Move
-                elif piece_to_move._name == "R":
-                    piece_to_move.piece_moved == True        
-            
+                    # Rook First Move
+                    elif piece_to_move._name == "R":
+                        piece_to_move.piece_moved == True        
+                
                 # Change Player Turn
+                self.player_change = None
                 self.switch_player()
-    
+        
     # _______________________________ Promotion Pawn __________________________
     def promotion(self, piece: Pawn):
         pawn_row = piece.get_row()
@@ -311,6 +316,10 @@ class Board:
                 
                 self.board[0][5].piece_moved = True
                 self.board[0][6].piece_moved = True
+    
+    # _______________________________ Casteling Move __________________________
+    def king_check(self):
+        print("ToDo!")
         
 
 
