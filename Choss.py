@@ -54,17 +54,24 @@ class Choss:
         
         if event.type == pygame.QUIT:
             sys.exit()
-            
+        
+        # Event Mouse Left Button 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == self.LEFT:
             print("Left Mouse Click:", mouse_pos)
             piece_selected = self.click_collisions(mouse_pos)
+            
+            # Clear User Highlighed Squares
             if len(self.right_click_history) > 0:
                 self.right_click_history = []
             else:
+                # Left button history only has length 2 
+                # First element on the list -> Piece to move
+                # Second elemnt on the list -> Position to move the piece
                 if  len(self.left_click_history) == 0:
                     if piece_selected._name != self.No_Piece_Ref._name and piece_selected._player == self.player_turn:
                         self.left_click_history.append(piece_selected) 
 
+                # Only one click to hightlight frindly pieces
                 elif len(self.left_click_history) == 1:
                     if piece_selected._player == self.player_turn:
                         self.left_click_history = [piece_selected]
@@ -75,13 +82,13 @@ class Choss:
                         
                         self.game_board.print_board()
                         self.left_click_history = []
-                        
-                        
-                    
-    
+        
+        # Event Mouse Right Button 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == self.RIGHT:
             print("Right Mouse Click: ", mouse_pos)
             piece_selected = self.click_collisions(mouse_pos)
+            
+            # Clear left click history with one right mouse click
             if len(self.left_click_history) > 0:
                     self.left_click_history = []
             else:
@@ -164,12 +171,6 @@ class Choss:
                 return
             
             self.selected_piece = self.left_click_history[0]
-            self.selected_piece.moves()
-            self.game_board.remove_move_over_piece(self.selected_piece)
-            self.game_board.remove_move_colour(self.selected_piece)
-            
-            if self.left_click_history[0]._name == "K":
-                self.game_board.casteling(self.left_click_history[0])
 
             for element in self.selected_piece.list_moves:
                 board_pos_row = element[0]
@@ -186,6 +187,7 @@ class Choss:
                     ],
                 )   
     # ________________________________Hightlight Squares _________________________
+    # Gives user selected squares a diferent colour
     def highlight_squares(self) -> None:
         for element in self.right_click_history:
             board_pos_row = element.get_row()
@@ -200,7 +202,8 @@ class Choss:
                     self.settings.grid_height,
                 ],
             ) 
-            
+    
+    # Gives selected piece a diferent colour square
     def highrlight_piece(self) -> None:
         self.selected_piece = self.left_click_history[0]
         pygame.draw.rect(

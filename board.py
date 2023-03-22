@@ -116,6 +116,16 @@ class Board:
                     break
             piece.list_moves = list_moves_player
             self.pawn_attack(piece)
+    # _________________________________Remove Move over Pieces ___________________
+    def remove_move_king(self, piece_K: King):
+        for row in range(len(self.board)):
+            for col in range(len(self.board)):
+                piece = self.board[row][col]
+                if piece_K._player != piece._player:
+                    for move in piece.list_moves:
+                        if move in piece_K.list_moves:
+                            piece_K.list_moves.remove(move)
+                    
 
     # _______________________________ Pawn Attack __________________________
     def pawn_attack(self, piece):
@@ -142,28 +152,37 @@ class Board:
                 
                 # Special moves
                 if piece._name == 'K':
+                    self.remove_move_king(piece)
                     self.casteling(piece)
                 self.player_change = self.player_turn
                 
-    # _______________________________ Moving Piece __________________________
-    def verify_move_piece(self, piece: object, move: (tuple)):
+    # _______________________________ Verify Move __________________________
+    def verify_move_piece(self, piece: object, move: (tuple)) -> bool:
         piece_moves = piece.list_moves
 
         if move not in piece_moves:
             return False
-        else:
+        else:            
             return True
         
     # _______________________________ Moving Piece __________________________
-    def move_piece(self, piece_to_move, new_position):
+    def move_piece(self, piece_to_move: Piece, new_position: Piece):
         # PLayer con only move thier own piece
         if piece_to_move._player == self.player_turn:
             # Verify if the move is possible
             if self.verify_move_piece(piece_to_move, (new_position.get_row(), new_position.get_col())):
                  # King First Move
-                if piece_to_move._name == "K":
-                    if piece_to_move.piece_moved == False and  (new_position.get_row(), new_position.get_col()) in piece_to_move.castle_moves:
-                            self.move_castling((new_position.get_row(), new_position.get_col()))
+                if piece_to_move._name == "K" and piece_to_move.piece_moved == False:
+                    if (new_position.get_row(), new_position.get_col()) in piece_to_move.castle_moves:
+                        self.move_castling((new_position.get_row(), new_position.get_col()))
+                    else:
+                        # Update old position to No_Piece
+                        self.board[piece_to_move.get_row()][piece_to_move.get_col()] = No_Piece(
+                            (piece_to_move.get_row(), piece_to_move.get_col()), Player.NONE
+                        )
+                        # Update piece to new position
+                        self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
+                        piece_to_move.change_pos(new_position.get_pos())
                             
                 else:      
                     # Update old position to No_Piece
@@ -205,6 +224,7 @@ class Board:
             
     # _______________________________ Casteling Calculation Move __________________________
     def casteling(self, king: King):
+        
         white_left_rook = self.board[7][0]
         white_right_rook = self.board[7][7]
         
@@ -318,8 +338,12 @@ class Board:
                 self.board[0][6].piece_moved = True
     
     # _______________________________ Casteling Move __________________________
-    def king_check(self):
-        print("ToDo!")
+    def verify_king_check(self):
+        copy_board = self.board
+        
+        
+        
+                
         
 
 
