@@ -92,6 +92,8 @@ class Knight(Piece):
         self._name = "H"
         self.list_moves = []
         self.relative_moves = []
+        self.piece_moved = False
+
         
         # Set Piece Movement
         self.relative_move()
@@ -122,6 +124,8 @@ class Bishop(Piece):
         self._name = "B"
         self.list_moves = []
         self.relative_moves = []
+        self.piece_moved = False
+
         
         # Set Piece Movement
         self.relative_move()
@@ -216,6 +220,8 @@ class Queen(Piece):
         self._name = "Q"
         self.list_moves = []
         self.relative_moves = []
+        self.piece_moved = False
+
         
         # Set Piece Movement
         self.relative_move()

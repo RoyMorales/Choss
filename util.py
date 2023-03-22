@@ -29,6 +29,10 @@ def absolute_moves(piece: object, list_moves: list) -> list[tuple]:
                     
     return absolute_moves
 
+#################                                       #################
+#################         EXTREMELY BAD WRITTEN SHIT    #################
+#################                                       #################
+
 def rook_remove_moves(board: object, piece: object):
     moves_col_positive = []
     moves_col_negative = []
