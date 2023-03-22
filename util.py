@@ -124,7 +124,7 @@ def bishop_remove_moves(board: object, piece: object):
             poss_moves_diag_1 = []
             for index in range(len(moves_diag_1)):
                 move = moves_diag_1[index]
-                if board[move[0]][move[1]]._name == "*":
+                if board[move[0]][move[1]]._name == "*" or board[move[0]][move[1]]._name == "K":
                     poss_moves_diag_1.append(move)
                 else:
                     poss_moves_diag_1.append(move)
@@ -134,7 +134,7 @@ def bishop_remove_moves(board: object, piece: object):
             poss_moves_diag_2 = []
             for index in range(len(moves_diag_2)):
                 move = moves_diag_2[index]
-                if board[move[0]][move[1]]._name == "*":
+                if board[move[0]][move[1]]._name == "*" or board[move[0]][move[1]]._name == "K":
                     poss_moves_diag_2.append(move)
                 else:
                     poss_moves_diag_2.append(move)
@@ -143,7 +143,7 @@ def bishop_remove_moves(board: object, piece: object):
             poss_moves_diag_3 = []
             for index in range(len(moves_diag_3)):
                 move = moves_diag_3[index]
-                if board[move[0]][move[1]]._name == "*":
+                if board[move[0]][move[1]]._name == "*" or board[move[0]][move[1]]._name == "K":
                     poss_moves_diag_3.append(move)
                 else:
                     poss_moves_diag_3.append(move)
@@ -152,7 +152,7 @@ def bishop_remove_moves(board: object, piece: object):
             poss_moves_diag_4 = []
             for index in range(len(moves_diag_4)):
                 move = moves_diag_4[index]
-                if board[move[0]][move[1]]._name == "*":
+                if board[move[0]][move[1]]._name == "*" or board[move[0]][move[1]]._name == "K":
                     poss_moves_diag_4.append(move)
                 else:
                     poss_moves_diag_4.append(move)

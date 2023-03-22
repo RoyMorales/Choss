@@ -120,13 +120,15 @@ class Board:
     def remove_move_king(self, piece_K: King):
         for row in range(len(self.board)):
             for col in range(len(self.board)):
-                piece = self.board[row][col]
-                if piece_K._player != piece._player:
-                    for move in piece.list_moves:
+                piece_board = self.board[row][col]
+                                
+                if piece_board._name == piece_K._name:
+                    pass
+                elif piece_board._player != piece_K._player:
+                    for move in piece_board.list_moves:
                         if move in piece_K.list_moves:
                             piece_K.list_moves.remove(move)
-                    
-
+                                
     # _______________________________ Pawn Attack __________________________
     def pawn_attack(self, piece):
         list_attacks = []
@@ -134,13 +136,9 @@ class Board:
             if self.board[move[0]][move[1]]._player != piece._player and self.board[move[0]][move[1]]._name != '*':
                 list_attacks.append(move)
         piece.list_moves = piece.list_moves + list_attacks
-    
-    # _______________________________Set pieces moves_______________________ 
-    def set_pieces_moves(self):
-        # Preveents multiple calculations
-        if self.player_change != None:
-            return
         
+    # __________________________ Compute moves for each piece _____________________
+    def compute_pieces(self):
         for row in range(len(self.board)):
             for col in range(len(self.board)):
                 piece = self.board[row][col]
@@ -150,11 +148,26 @@ class Board:
                 self.remove_move_over_piece(piece)
                 self.remove_move_colour(piece)
                 
+    # _______________________________Set pieces moves_______________________ 
+    def set_pieces_moves(self):
+        # Preveents multiple calculations
+        if self.player_change != None:
+            return
+        print("-----------------------------------------")
+        print("Computed Possible Moves")
+        print("-----------------------------------------\n")
+
+        self.compute_pieces()
+        
+        for row in range(len(self.board)):
+            for col in range(len(self.board)):
+                piece = self.board[row][col]
+
                 # Special moves
                 if piece._name == 'K':
                     self.remove_move_king(piece)
                     self.casteling(piece)
-                self.player_change = self.player_turn
+        self.player_change = self.player_turn
                 
     # _______________________________ Verify Move __________________________
     def verify_move_piece(self, piece: object, move: (tuple)) -> bool:
@@ -210,11 +223,11 @@ class Board:
 
                     # Rook First Move
                     elif piece_to_move._name == "R":
-                        piece_to_move.piece_moved == True        
-                
-                # Change Player Turn
-                self.player_change = None
-                self.switch_player()
+                        piece_to_move.piece_moved == True 
+                           
+            # Change Player Turn
+            self.player_change = None
+            self.switch_player()
         
     # _______________________________ Promotion Pawn __________________________
     def promotion(self, piece: Pawn):

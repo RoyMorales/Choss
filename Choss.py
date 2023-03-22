@@ -48,6 +48,8 @@ class Choss:
             # Single Calculation of pieces moves
             if self.player_change == None:
                 self.game_board.set_pieces_moves()
+                print("-----------------------------------------")
+                print("Player to play: ", self.game_board.player_change)
             
             pygame.display.update()
 
@@ -285,15 +287,13 @@ class Choss:
         
         selected_piece = self.game_board.board[board_pos_y][board_pos_x]
         
-        if selected_piece._name == self.No_Piece_Ref._name:
-            print("Empty Space")
-        else:
+        if selected_piece._name != self.No_Piece_Ref._name:
+            print("-----------------------------------------")
             print("Piece Selected: ", selected_piece._name)
             print("Piece Colour: ", selected_piece._player.name)
-            print("Position X: ", selected_piece.get_col())
-            print("Position Y: ", selected_piece.get_row())
-        print()
-        
+            print("Position Row: ", selected_piece.get_row())
+            print("Position Col: ", selected_piece.get_col())
+            print("-----------------------------------------\n")            
         return selected_piece
     
     # _______________________________ Moving Animation ___________________________
