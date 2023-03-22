@@ -4,6 +4,8 @@ import pygame
 from player import Player
 from util import absolute_moves
 
+pieces_path = "./resources/pieces/"
+
 
 class Piece:
     """
@@ -62,9 +64,9 @@ class Rook(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/rook_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "rook_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/rook_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "rook_black.png")
         else:
             print("Rook image not found!")
 
@@ -100,9 +102,9 @@ class Knight(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/knight_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "knight_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/knight_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "knight_black.png")
         else:
             print("Knight image not found!")
 
@@ -132,9 +134,9 @@ class Bishop(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/bishop_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "bishop_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/bishop_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "bishop_black.png")
         else:
             print("Bishop image not found!")
 
@@ -172,9 +174,9 @@ class Pawn(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/pawn_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "pawn_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/pawn_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "pawn_black.png")
         else:
             print("Pawn image not found!")
 
@@ -228,9 +230,9 @@ class Queen(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/queen_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "queen_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/queen_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "queen_black.png")
         else:
             print("Queen image not found!")
 
@@ -271,9 +273,9 @@ class King(Piece):
 
         # Image for the Piece White or Black
         if self._player == Player.WHITE:
-            self.piece_image = pygame.image.load("./resources/king_white.png")
+            self.piece_image = pygame.image.load(pieces_path + "king_white.png")
         elif self._player == Player.BLACK:
-            self.piece_image = pygame.image.load("./resources/king_black.png")
+            self.piece_image = pygame.image.load(pieces_path + "king_black.png")
         else:
             print("King image not found!")
 
@@ -288,18 +290,6 @@ class King(Piece):
                 if i != 0 or j != 0:
                     moves.append((i, j))
         self.relative_moves = moves
-    
-    # Caslting left
-    def left_castle_move(self):
-        move = absolute_moves(self, [(0, -1)])
-        if self.castle_left == True:
-            self.list_moves = self.list_moves + move
-
-    # Caslting Right
-    def left_castle_move(self):
-        move = absolute_moves(self, [(0, 1)])
-        if self.castle_right == True:
-            self.list_moves = self.list_moves + move
 
     # Updates list of moves possible for the piece in the given position       
     def moves(self):

@@ -17,7 +17,11 @@ class Choss:
         self.screen_game = pygame.display.set_mode(
             (self.settings.window_width, self.settings.window_height)
         )
-
+        self.font_path = "./resources/font/"
+        self.font_board_path = self.font_path + "theboldfont.ttf"
+        self.font_board = pygame.font.SysFont("theboldfont", int(self.settings.grid_height / 4))
+        print("Font Size: ", int(self.settings.grid_height / 4))
+        
         # Set Board
         self.game_board = Board()
         self.selected_piece_moving = False
@@ -163,6 +167,44 @@ class Choss:
                 ),
                 width=self.settings.lines_width,
             )
+            
+        # Letters
+        letter_suface_A = self.font_board.render("A", True, self.settings.square_colour_bright)
+        letter_suface_B = self.font_board.render("B", True, self.settings.square_colour_dark)
+        letter_suface_C = self.font_board.render("C", True, self.settings.square_colour_bright)
+        letter_suface_D = self.font_board.render("D", True, self.settings.square_colour_dark)
+        letter_suface_E = self.font_board.render("E", True, self.settings.square_colour_bright)
+        letter_suface_F = self.font_board.render("F", True, self.settings.square_colour_dark)
+        letter_suface_G = self.font_board.render("G", True, self.settings.square_colour_bright)
+        letter_suface_H = self.font_board.render("H", True, self.settings.square_colour_dark)
+
+        self.screen_game.blit(letter_suface_A, (1 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_B, (2 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_C, (3 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_D, (4 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_E, (5 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_F, (6 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_G, (7 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        self.screen_game.blit(letter_suface_H, (8 * self.settings.grid_height - self.settings.grid_height / 6, 8 * self.settings.grid_width - self.settings.grid_width / 6))
+        
+        # Numbers
+        number_surface_1 = self.font_board.render("1", False, self.settings.square_colour_dark)
+        number_surface_2 = self.font_board.render("2", False, self.settings.square_colour_bright)
+        number_surface_3 = self.font_board.render("3", False, self.settings.square_colour_dark)
+        number_surface_4 = self.font_board.render("4", False, self.settings.square_colour_bright)
+        number_surface_5 = self.font_board.render("5", False, self.settings.square_colour_dark)
+        number_surface_6 = self.font_board.render("6", False, self.settings.square_colour_bright)
+        number_surface_7 = self.font_board.render("7", False, self.settings.square_colour_dark)
+        number_surface_8 = self.font_board.render("8", False, self.settings.square_colour_bright)
+        
+        self.screen_game.blit(number_surface_1, (self.settings.grid_width / 10, 0 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_2, (self.settings.grid_width / 10, 1 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_3, (self.settings.grid_width / 10, 2 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_4, (self.settings.grid_width / 10, 3 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_5, (self.settings.grid_width / 10, 4 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_6, (self.settings.grid_width / 10, 5 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_7, (self.settings.grid_width / 10, 6 * self.settings.grid_height + self.settings.grid_height / 8))
+        self.screen_game.blit(number_surface_8, (self.settings.grid_width / 10, 7 * self.settings.grid_height + self.settings.grid_height / 8))
             
     # _________________________________Hightlight Moves _____________________________
     def highlight_moves(self) -> None:

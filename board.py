@@ -183,6 +183,13 @@ class Board:
                         # Update piece to new position
                         self.set_piece((new_position.get_row(), new_position.get_col()), piece_to_move)
                         piece_to_move.change_pos(new_position.get_pos())
+                        
+                        # Update King
+                        piece_to_move.castle_moves = []
+                        piece_to_move.castle_left = False
+                        piece_to_move.castle_right = False
+                        piece_to_move.piece_moved = True
+
                             
                 else:      
                     # Update old position to No_Piece
@@ -219,7 +226,7 @@ class Board:
             self.board[new_piece.get_row()][new_piece.get_col()] = new_piece
             
         elif pawn_row == 7:
-            new_piece = Queen((piece.get_pos), Player.BLACK)
+            new_piece = Queen((piece.get_pos()), Player.BLACK)
             self.board[new_piece.get_row()][new_piece.get_col()] = new_piece
             
     # _______________________________ Casteling Calculation Move __________________________
@@ -303,8 +310,13 @@ class Board:
                 self.board[7][3] = Rook((7, 3), Player.WHITE)
                 self.board[7][2] = King((7,2), Player.WHITE)
                 
+                # Rook
                 self.board[7][3].piece_moved = True
+                # King
                 self.board[7][2].piece_moved = True
+                self.board[7][6].castle_left = False
+                self.board[7][6].castle_right = False
+                self.board[7][6].castle_moves = []
 
         # White Right
         if self.board[7][7].piece_moved == False and self.board[7][4].piece_moved == False:
@@ -314,8 +326,14 @@ class Board:
                 self.board[7][5] = Rook((7, 5), Player.WHITE)
                 self.board[7][6] = King((7,6), Player.WHITE)
                 
+                # Rook
                 self.board[7][5].piece_moved = True
+                # King
                 self.board[7][6].piece_moved = True
+                self.board[7][6].castle_left = False
+                self.board[7][6].castle_right = False
+                self.board[7][6].castle_moves = []
+
         # Black Left
         if self.board[0][0].piece_moved == False and self.board[0][4].piece_moved == False:
             if move == (0,2):
@@ -324,8 +342,14 @@ class Board:
                 self.board[0][3] = Rook((0, 3), Player.BLACK)
                 self.board[0][2] = King((0,2), Player.BLACK)
                 
+                # Rook
                 self.board[0][3].piece_moved = True
+                # King
                 self.board[0][2].piece_moved = True
+                self.board[7][6].castle_left = False
+                self.board[7][6].castle_right = False
+                self.board[7][6].castle_moves = []
+                
         #Black Right
         if self.board[0][7].piece_moved == False and self.board[0][4].piece_moved == False:
             if move == (0,6):
@@ -334,8 +358,15 @@ class Board:
                 self.board[0][5] = Rook((0, 5), Player.BLACK)
                 self.board[0][6] = King((0,6), Player.BLACK)
                 
+                # Rook
                 self.board[0][5].piece_moved = True
+                # King
                 self.board[0][6].piece_moved = True
+                self.board[7][6].castle_left = False
+                self.board[7][6].castle_right = False
+                self.board[7][6].castle_moves = []
+
+
     
     # _______________________________ Casteling Move __________________________
     def verify_king_check(self):
