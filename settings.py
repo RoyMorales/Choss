@@ -3,8 +3,8 @@
 class SettingsClass:
     def __init__(self):
          # Window Settings
-        self.window_width = 1000
-        self.window_height = 1000
+        self.window_width = 800
+        self.window_height = 800
 
         # Game Grid
         self.number_squares = int(8)

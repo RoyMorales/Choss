@@ -22,6 +22,8 @@ class Choss:
         self.game_board = Board()
         self.selected_piece_moving = False
         self.selected_piece = None
+        self.player_turn = self.game_board.player_turn
+        self.player_change = None
         # Empty Space
         self.No_Piece_Ref = No_Piece((-1, -1), Player.NONE)
         
@@ -37,6 +39,11 @@ class Choss:
             self.check_event()
             self.draw_board()
             self.draw_pieces()
+            self.player_change = self.game_board.player_change
+            
+            # Single Calculation of pieces moves
+            if self.player_change == None:
+                self.game_board.set_pieces_moves()
             
             pygame.display.update()
 
@@ -55,17 +62,22 @@ class Choss:
                 self.right_click_history = []
             else:
                 if  len(self.left_click_history) == 0:
-                    if piece_selected._name != self.No_Piece_Ref._name:
+                    if piece_selected._name != self.No_Piece_Ref._name and piece_selected._player == self.player_turn:
                         self.left_click_history.append(piece_selected) 
 
                 elif len(self.left_click_history) == 1:
-                    self.left_click_history.append(piece_selected)
+                    if piece_selected._player == self.player_turn:
+                        self.left_click_history = [piece_selected]
+                    else:
+                        self.left_click_history.append(piece_selected)
+                        self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
+                        self.player_turn = self.game_board.player_turn
+                        
+                        self.game_board.print_board()
+                        self.left_click_history = []
+                        
+                        
                     
-                    
-                    
-                    self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
-                    self.left_click_history = []
-                    self.game_board.print_board()
     
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == self.RIGHT:
             print("Right Mouse Click: ", mouse_pos)
@@ -76,10 +88,6 @@ class Choss:
                 self.right_click_history.append(piece_selected)
                 self.highlight_squares()
                 
-    #elif event.type == pygame.MOUSEMOTION and self.selected_piece_moving == True:
-    #    self.moving_animation(mouse_pos)
-
-
     # ________________________________ Draw Board _______________________________
     def draw_board(self) -> None:
         # Draw Initial Black
@@ -159,6 +167,9 @@ class Choss:
             self.selected_piece.moves()
             self.game_board.remove_move_over_piece(self.selected_piece)
             self.game_board.remove_move_colour(self.selected_piece)
+            
+            if self.left_click_history[0]._name == "K":
+                self.game_board.casteling(self.left_click_history[0])
 
             for element in self.selected_piece.list_moves:
                 board_pos_row = element[0]
@@ -241,6 +252,7 @@ class Choss:
         return selected_piece
     
     # _______________________________ Moving Animation ___________________________
+    # Not implemented
     def moving_animation(self, mouse_pos):
         if self.selected_piece == None:
             print("Can not move None Piece")
