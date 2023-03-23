@@ -85,8 +85,6 @@ class Choss:
                         self.left_click_history.append(piece_selected)
                         self.game_board.move_piece(self.left_click_history[0], self.left_click_history[1])
                         self.player_turn = self.game_board.player_turn
-                        
-                        self.game_board.print_board()
                         self.left_click_history = []
         
         # Event Mouse Right Button 

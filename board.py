@@ -225,9 +225,10 @@ class Board:
                     elif piece_to_move._name == "R":
                         piece_to_move.piece_moved == True 
                            
-            # Change Player Turn
-            self.player_change = None
-            self.switch_player()
+                # Change Player Turn
+                self.print_board()
+                self.player_change = None
+                self.switch_player()
         
     # _______________________________ Promotion Pawn __________________________
     def promotion(self, piece: Pawn):
