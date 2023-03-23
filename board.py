@@ -13,6 +13,8 @@ class Board:
         self.player_turn = Player.WHITE
         self.player_change = None
 
+
+        
         # Inicialize Board
         self.board = []
         for i in range(self.settings.number_squares):
@@ -50,6 +52,11 @@ class Board:
         for row in range(2, 6):
             for col in range(self.settings.number_squares):
                 self.board[row][col] = No_Piece((row, col), Player.NONE)
+
+        # King check
+        self.king_check =  False
+        self.king_white = self.board[7][4]
+        self.king_black = self.board[0][4]
 
 
     # ______________________________ Set and Get and Remove_____________________
@@ -153,9 +160,9 @@ class Board:
         # Preveents multiple calculations
         if self.player_change != None:
             return
-        print("-----------------------------------------")
-        print("Computed Possible Moves")
-        print("-----------------------------------------\n")
+        #print("-----------------------------------------")
+        #print("Computed Possible Moves")
+        #sprint("-----------------------------------------\n")
 
         self.compute_pieces()
         
@@ -202,6 +209,12 @@ class Board:
                         piece_to_move.castle_left = False
                         piece_to_move.castle_right = False
                         piece_to_move.piece_moved = True
+                        piece_to_move.king_check = False
+                        
+                        if piece_to_move._player == Player.WHITE:
+                            self.king_white = piece_to_move
+                        elif piece_to_move._player == Player.BLACK:
+                            self.king_black = piece_to_move
 
                             
                 else:      
@@ -220,12 +233,18 @@ class Board:
                     
                     elif piece_to_move._name == "K":
                         piece_to_move.piece_moved == True
-
+                        
+                        if piece_to_move._player == Player.WHITE:
+                            self.king_white = piece_to_move
+                        elif piece_to_move._player == Player.BLACK:
+                            self.king_black = piece_to_move
+                    
                     # Rook First Move
                     elif piece_to_move._name == "R":
                         piece_to_move.piece_moved == True 
                            
                 # Change Player Turn
+                self.verify_king_check(self.board[piece_to_move.get_row()][piece_to_move.get_col()])
                 self.print_board()
                 self.player_change = None
                 self.switch_player()
@@ -379,11 +398,44 @@ class Board:
                 self.board[7][6].castle_left = False
                 self.board[7][6].castle_right = False
                 self.board[7][6].castle_moves = []
-
-
+    # _______________________________ Get King __________________________
+    # Get king of the define player colour
+    def get_king_opposite(self, player: Player) -> Piece:
+        for row in range(len(self.board)):
+            for col in range(len(self.board)):
+                piece_board = self.board[row][col]
+                if piece_board._name == "K" and piece_board._player != player:
+                    return piece_board
     
-    # _______________________________ Casteling Move __________________________
-    def verify_king_check(self):
+    def get_king(self, player: Player) -> Piece:
+        for row in range(len(self.board)):
+            for col in range(len(self.board)):
+                piece_board = self.board[row][col]
+                if piece_board._name == "K" and piece_board._player == player:
+                    return piece_board                     
+    
+    # _______________________________ King Checks __________________________
+    def verify_king_check(self, last_move_piece: Piece) -> bool:
+        last_move_piece.moves()
+        self.remove_move_over_piece(last_move_piece)
+        self.remove_move_colour(last_move_piece)
+        
+        if last_move_piece._player == Player.WHITE:
+            king_opposite = self.king_black
+        elif last_move_piece._player == Player.BLACK:
+            king_opposite = self.king_white
+        
+        for move in last_move_piece.list_moves:
+            if move == king_opposite.get_pos():
+                king_opposite.king_check = True
+                self.king_check = True
+                return True
+        king_opposite.king_check = False
+        self.king_check = False
+        return False
+    
+    # _______________________________ Self Checks __________________________
+    def verify_next_move_king_check(self):
         copy_board = self.board
         
         

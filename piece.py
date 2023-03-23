@@ -211,7 +211,6 @@ class Pawn(Piece):
         
     # Updates list of moves possible for the piece in the given position
     def moves(self):
-        self.relative_move()
         self.attack_move()
         self.list_moves = absolute_moves(self, self.relative_moves)
   
@@ -267,6 +266,7 @@ class King(Piece):
         self.piece_moved = False
         self.castle_left = False
         self.castle_right = False
+        self.king_check = False
         
         # Set Piece Movement
         self.relative_move()

@@ -142,6 +142,9 @@ class Choss:
         if len(self.right_click_history) != 0:
             self.highlight_squares() 
             
+        if self.game_board.king_check == True:
+            self.hightlight_check()
+            
         # Draw lines
         # Horizontal
         for line in range(1, self.settings.number_squares):
@@ -259,6 +262,20 @@ class Choss:
             ],
         )  
         
+    # ________________________________Hightlight Check _________________________
+    def hightlight_check(self) -> None:
+        king = self.game_board.get_king(self.player_turn)
+        if self.game_board.verify_king_check:
+            pygame.draw.rect(
+                self.screen_game,
+                self.settings.square_colour_highlight,
+                [
+                    self.settings.grid_width * king.get_col(),
+                    self.settings.grid_height * king.get_row(),
+                    self.settings.grid_width,
+                    self.settings.grid_height,
+                ]
+            )
             
     # ________________________________ Draw Pieces _______________________________
     def draw_pieces(self) -> None:
@@ -291,7 +308,7 @@ class Choss:
             print("Piece Colour: ", selected_piece._player.name)
             print("Position Row: ", selected_piece.get_row())
             print("Position Col: ", selected_piece.get_col())
-            print("-----------------------------------------\n")            
+            print("-----------------------------------------")            
         return selected_piece
     
     # _______________________________ Moving Animation ___________________________
